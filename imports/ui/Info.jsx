@@ -1,8 +1,9 @@
+/* @flow */
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import Links from '../api/links';
-
-class Info extends Component {
+/*:: type LinkType = {_id:string,url:string,title:string};*/
+class Info extends Component/*::<{links:[LinkType]}>*/ {
   render() {
     const links = this.props.links.map(
       link => this.makeLink(link)
@@ -16,7 +17,7 @@ class Info extends Component {
     );
   }
 
-  makeLink(link) {
+  makeLink(link/*:LinkType*/) {
     return (
       <li key={link._id}>
         <a href={link.url} target="_blank">{link.title}</a>
@@ -25,8 +26,9 @@ class Info extends Component {
   }
 }
 
-export default InfoContainer = withTracker(() => {
+const InfoContainer = withTracker(() => {
   return {
     links: Links.find().fetch(),
   };
 })(Info);
+export default InfoContainer;

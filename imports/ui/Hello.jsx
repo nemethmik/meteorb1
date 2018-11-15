@@ -1,6 +1,7 @@
+/* @flow */
 import React, { Component } from 'react';
 
-export default class Hello extends Component {
+export default class Hello extends Component/*:: <{},{counter:number}>*/ {
   state = {
     counter: 0,
   }

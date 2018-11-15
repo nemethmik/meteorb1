@@ -1,3 +1,5 @@
+/* @flow */
 import { Mongo } from 'meteor/mongo';
 
-export default Links = new Mongo.Collection('links');
+const Links = new Mongo.Collection('links');
+export default Links;

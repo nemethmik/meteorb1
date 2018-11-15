@@ -1,0 +1,30 @@
+[ignore]
+.*/.meteor/.*\.json
+.*/.npm/.*\.json
+
+[include]
+
+[libs]
+.flow-typed
+.app-flow-types
+
+[lints]
+
+[options]
+# Absolute path support:
+# e.g. "/collections/todos"
+module.name_mapper='^\/\(.*\)$' -> '<PROJECT_ROOT>/\1'
+
+# Meteor none core package support
+# e.g. "meteor/kadira:flow-router"
+module.name_mapper='^meteor\/\(.*\):\(.*\)$' -> '<PROJECT_ROOT>/.meteor/local/build/programs/server/packages/\1_\2'
+
+# Meteor core package support
+# e.g. "meteor/meteor"
+module.name_mapper='^meteor\/\(.*\)$' -> '<PROJECT_ROOT>/.meteor/local/build/programs/server/packages/\1'
+
+# Fallback for Meteor core client package
+# e.g. "meteor/meteor"
+module.name_mapper='^meteor\/\(.*\)$' -> '<PROJECT_ROOT>/.meteor/local/build/programs/web.browser/packages/\1'
+
+[strict]
