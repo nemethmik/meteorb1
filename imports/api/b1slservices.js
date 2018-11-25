@@ -5,8 +5,15 @@ import util from "util"
 import B1Session from "./b1session" //This is important for Flow
 export default class B1SLServices {
   b1session/*:B1Session*/
+  queryUrl/*:?string*/
+  queryResponse/*:?{}*/
+  b1Error/*:B1Error*/
+  static NOERROR = {code:0,message:{lang:"en-us",value:"NO ERROR"}}
   constructor(b1session/*:B1Session*/) {
       this.b1session = b1session
+      this.queryUrl = null
+      this.queryResponse = null
+      this.b1Error = B1SLServices.NOERROR
   }
   callAsync = async (method/*:HTTPCommands*/, url/*:string*/, options/*:HTTPOptions*/) => {
     if(Meteor.isClient) options.beforeSend = function(xhr) {xhr.withCredentials = true}
@@ -32,5 +39,24 @@ export default class B1SLServices {
     }
     return this.b1session
   }
-
+  queryAsync = async (queryString/*:string*/) => {
+    if(this.b1session.isSessionExpired()) await this.loginAsync()
+    this.queryUrl = this.b1session.serverUrl + queryString
+    this.queryResponse = await this.callAsync("GET", this.queryUrl,{data:{}})
+    this.b1Error = B1SLServices.NOERROR  
+    if(this.queryResponse.statusCode == 200) return this.queryResponse.data.value
+    else {
+      if(this.queryResponse.data && this.queryResponse.data.error) {
+        this.b1Error = this.queryResponse.data.error
+      }
+      throw new Error(util.inspect(this.b1Error ? this.b1Error : this.queryResponse))
+    }
+  }
+  queryItemsOfGroupAsync = async (itemGroupCode/*:string*/)/*:Promise<Array<B1Item>>*/ => {
+    return await this.queryAsync("Items?$select=ItemCode,ItemName"
+    + "&$filter=ItemsGroupCode eq " + itemGroupCode)
+  }
+  queryOpenPurchaseOrdersAsync = async (supplierCode/*:?string*/,warehouseCode/*:?string*/)/*:Promise<Array<B1Document>>*/ => {
+  return await this.queryAsync("PurchaseOrders?$select=DocNum,CardName&$filter=DocumentStatus eq 'bost_Open'")
+  }
 }
