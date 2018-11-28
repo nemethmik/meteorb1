@@ -24,7 +24,7 @@
       "client": "client/main.jsx",
       "server": "server/main.js"
     },
-    "testModule": "tests/b1querytestseries.js"
+    "testModule": "tests/b1activitytests.js"
   },
   "devDependencies": {
     "flow-bin": "^0.86.0"

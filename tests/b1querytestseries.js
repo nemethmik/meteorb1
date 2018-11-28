@@ -12,7 +12,7 @@ describe("B1SL_QueryTestSeries", function B1SL_QueryTestSeries () {
       console.log("QueryItemsOfGroup101",queryResponse)
       assert.ok(Array.isArray(queryResponse),"Query Response is Not an Array")
       assert.ok(Array.isArray(queryResponse) && queryResponse.length > 0,"Query Response is an Empty Array")
-      assert.ok(queryResponse[1].ItemCode == "OQA1","First item code is expected to be OQA1")
+      assert.ok(queryResponse[0].ItemCode == "OQA1","First item code is expected to be OQA1")
     } catch(e) {
       console.log("QueryItemsOfGroup101:Error",b1s.b1Error.message.value)
       assert.ok(false,"Didn't expect exception:" + e)
@@ -23,7 +23,7 @@ describe("B1SL_QueryTestSeries", function B1SL_QueryTestSeries () {
     console.log("B1SLServices.queryOpenPurchaseOrdersAsync",queryResponse)
     assert.ok(Array.isArray(queryResponse),"Query Response is Not an Array")
     assert.ok(Array.isArray(queryResponse) && queryResponse.length > 0,"Query Response is an Empty Array")
-    assert.ok(queryResponse[1].DocNum == 502,"First document number is expected to be 502")
+    assert.ok(queryResponse[0].DocNum == 502,"First document number is expected to be 502")
   })
   it("ErrorHandlingForInvalidPropertyName", async function ErrorHandlingForInvalidPropertyName() {
     try {
