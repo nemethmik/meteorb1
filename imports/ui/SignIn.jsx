@@ -1,6 +1,15 @@
 /* @flow */
 import React, {Component} from "react"
-export class SignIn extends Component/*:: <{},{|email:string,password:string|}>*/ {
+import {connect} from "react-redux"
+import {Redirect} from "react-router-dom"
+import {signIn} from "./marioactions"
+/*::
+type SignInProps = {|
+  ...AuthDetails,
+  ...SignInAction
+|}
+*/
+class SignInComponent extends Component/*::<SignInProps,UserCredentials>*/ {
   state = {
     email: "",
     password:""
@@ -10,9 +19,11 @@ export class SignIn extends Component/*:: <{},{|email:string,password:string|}>*
   }
   handleSubmit = (e/*:SyntheticEvent<>*/) => {
     e.preventDefault()
-    console.log(this.state)
+    this.props.signIn(this.state)
   }
   render() {
+    const {authError,auth} = this.props
+    if(auth && auth.uid) return <Redirect to="/"/> //Back to the dashboard
     return (
       <div className="container">
         <form onSubmit={this.handleSubmit} className="white">
@@ -27,9 +38,20 @@ export class SignIn extends Component/*:: <{},{|email:string,password:string|}>*
           </div>
           <div className="input-field">
             <button className="btn pink lighten-1 z-depth-0">Login</button>
+            <div className="red-text center">{authError && <p>{authError}</p>}</div>
           </div>
         </form>
       </div>
-    );
+    )
   }
 }
+const mapDispatchToProps = (dispatch/*:Dispatch*/)/*:SignInAction*/ => ({
+  signIn:(credentials/*:UserCredentials*/)=>dispatch(signIn(credentials))
+})
+const mapStateToProps = (state)/*:AuthDetails*/ => {
+  return {
+    authError: state.auth.authError,
+    auth:state.firebase.auth
+  }
+}
+export const SignIn = connect(mapStateToProps, mapDispatchToProps)(SignInComponent)

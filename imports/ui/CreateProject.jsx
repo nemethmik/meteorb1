@@ -1,18 +1,33 @@
 /* @flow */
 import React, {Component} from "react"
-export class CreateProject extends Component/*:: <{},{|title:string,content:string|}>*/ {
+import {connect} from "react-redux"
+import {Redirect} from "react-router-dom"
+import {createProject} from "./marioactions"
+/*::
+type CreateProjectProps = {
+  ...CreateProjectAction,
+  ...AuthUid,
+  history:{push:(string)=>void}
+}
+*/
+class CreateProjectComponent extends Component/*::<CreateProjectProps,ProjectDocument>*/ {
   state = {
+    //id is defined optional and not required here
     title: "",
-    content:"",
+    content:""
   }
   handleChange = (e/*:SyntheticEvent<HTMLInputElement>*/) => {
     this.setState({[e.currentTarget.id]:e.currentTarget.value})
   }
   handleSubmit = (e/*:SyntheticEvent<>*/) => {
     e.preventDefault()
-    console.log(this.state)
+    //console.log(this.state)
+    this.props.createProject(this.state)
+    this.props.history.push("/") //We don't need to use the Redirect component here.
   }
   render() {
+    const {auth} = this.props
+    if(!(auth && auth.uid)) return <Redirect to="/signin"/> //Should be replaced with the navroutes
     return (
       <div className="container">
         <form onSubmit={this.handleSubmit} className="white">
@@ -33,3 +48,8 @@ export class CreateProject extends Component/*:: <{},{|title:string,content:stri
     );
   }
 }
+const mapDispatchToProps = (dispatch/*:Dispatch*/)/*:CreateProjectAction*/ => ({
+    createProject:(project/*:ProjectDocument*/)=>dispatch(createProject(project))
+})
+const mapStateToProps = (state) => {return {auth:state.firebase.auth}}
+export const CreateProject = connect(mapStateToProps, mapDispatchToProps)(CreateProjectComponent)

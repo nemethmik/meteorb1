@@ -43,3 +43,8 @@ I've learned and used a really nifty feature of JavaScript
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_Operators#Short-circuit_evaluation">Short Circuit Logical Operators</a> to prevent the Flow errors "Cannot add `Xxx` and `Yyy` because undefined [1] is incompatible with Zzz [2]", which is caused by the optional (question-marked) field Flow type definitions.
 
 SAP B1 works nicely with **ISO date/time strings** returned by Date.toISOString(); this date string, however is zero-offset, that is it always converted to GMT-0, that's why it has a Z at the end of the string. Unfortunmately, SAP B1 SL doesn't convert this string back to a correct time according to the server time zone setting of the company database, since SL simply cuts out the date or time portion from the ISO date-time string. So, for correct date/time handling, the timezone of the server should be queried from SAP B1 via SL, if available. If not available, this limitations can be corrected with exposing a schemantic layer view with this information. With this offset all dates from the client should be explicitly converted to the company database time zone. I think, SAP B1 should store all dates and times as zero-offset (GMT-0) ISO date strings, to guarantee a consistent date/time handling. GraphQL has no date/time type at all; so, in our applications we can implement a perfectly consistent universal date/time handling. These zero-offset ISO strings are perfect for storing and transferring date/time values. 
+
+## The Best Visual Studio (VS) Code Features
+### Multi-Cursor Selection
+<img src="./public/visualstudiocodemulticursor.png" width="30%" />
+

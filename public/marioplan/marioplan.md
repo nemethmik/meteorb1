@@ -6,7 +6,7 @@ I renamed the marioplan branch to marioplan1 with VS Code's excellent Git tools.
 ### Summary of Changes: React and Redux Packages on package.json
 <table>
 <tr>
-<td><img src="reactreduxpackagesinprojectjson.png"/>
+<td width="50%"><img src="reactreduxpackagesinprojectjson.png"/>
 <td style="vertical-align:top">
   <ul>
   <li> meteor npm install react-router-dom redux react-redux
@@ -15,7 +15,7 @@ I renamed the marioplan branch to marioplan1 with VS Code's excellent Git tools.
   </ul>
 </tr>
 <tr>
-<td width="50%"><img src="mariotypedefs1.png"/>
+<td><img src="mariotypedefs1.png"/>
 <td style="vertical-align:top">
 
 **MarioProjectDetails** is the three-field type of a single project document.
@@ -73,7 +73,58 @@ I lazily defined an inline state type definition **{|email:string,password:strin
 
 The **props/*:{match:{params:{id:number|string}}}*/** definition caused me a lot of research, but I found no quick and easy solution. The complexity is cause by the way React browser router works: in the App.jsx the **<Route path={navroutes.project + "/:id"} component={ProjectDetails} />** actually defines an id field, and it is passed to the ProjectDetails component via this "magic" **props.match.params.id** I absolutely hate this, but this is how React works.   
 </tr>
-
-
-
 </table>
+
+## Sprint 2 - Beyong Getting Started: Redux Thunk
+This sprint covers videos 14 - . Video 14 starts talking about Redux Thunk.
+I created a new branch for this sprint: marioplan2.
+
+<table>
+<tr>
+<td width="50%"><img src="flowerrorcannotcallcreatestorebecausestoreenhancer.png"/>
+<td style="vertical-align:top">
+  <ul>
+  <li> meteor npm install redux-thunk 
+  <li> flow-typed install --libdefDir .flow-typed
+  </ul>
+  So, when working with the Redux Thunk middleware, an action creator that intends to perform an async operation (HTTP request, for example) should return the control immediately with a function which performs the async operation; when the async function is done it redispatches the Redux process.
+
+  If you have the Flow error "Cannot call createStore because StoreEnhancer is incompatible with $Shape of $ObjMap in the first argument", simply **remove the redux_v4.x.x.js from the .flow_typed folder**. You'd better **delete react-redux_v5.x.x.js**, too to get rid of the Flow error message "Dispatch is not a polymorphic type". Now, you shouldn't call flow-typed install --libdefDir .flow-typed, because it would automatically reinstall redux and react-redux Flow typed files.
+
+  Nevertheless, https://flow.org/en/docs/react/redux/ is quite a detailed document about typing Redux and Redux Thunk.
+  Redux Thunk is middleware, the applyMiddleware returns an object called Redux Store Enhancer, just like reduxFirestore, reactReduxFirebase functions create store enhancer objects.
+</tr>
+<tr>
+<td><img src="addfirebasetoyourwebapp.png"/>
+<td style="vertical-align:top">
+
+**meteor npm install firebase react-redux-firebase redux-firestore**
+You cannot call the generic flow-typed install, but you can install Flow typed modules one-by-one.
+<img src="firebaseflowtypeinstallation.png"/>
+**flow-typed install firebase@5 --libdefDir .flow-typed**
+No Flow typed libraries are available for react-redux-firebase and redux-firestore at least not on 2018/11/30.
+
+Flow supports type spread operator, too, brilliant: https://github.com/facebook/flow/releases/tag/v0.42.0
+</tr>
+<tr>
+<td><img src="unexpectedidentifierawait.png"/>
+<td style="vertical-align:top">
+
+This **Unexpected identifier await getFirestore** drove me crazy for an hour or so. The reason was that I forgot to declare the Redux Thunk callback function to be async.
+</tr>
+<tr>
+<td><img src="firestoredatavsordered.png"/>
+<td style="vertical-align:top">
+
+The data field in the firestore Redux integration holds a hash-table of the objects, while ordered is an array. This was quite tricky to find: the Flow documentation section, **Objects as Maps** (https://flow.org/en/docs/types/objects/#toc-objects-as-maps) gives all the details. The syntax is in the case of a FireBase data colection is **`{[string]:{field1:string,field2:number}}`** This is called **indexer property**, too. An indexer can be optionally named in the Flow definition, for documentation purposes: **`{[id:string]:{id:string,field2:number}}`**, this syntax is especially great since it shows that the id from the internal object is used as the indexer property in the outer object; but actually this is not the case with Firebase: the id is only available as the indexer property in the **firestore.data.projects** collection object. The **firestore.ordered.projects** is an array, so the id is included in the array element objects.
+
+The **createdAt** field is a timestamp and it cannot be simply rendered in JSX, since we have this finicky error: "Objects are not valid as a React child (found: object with keys {seconds, nanoseconds})
+</tr>
+<tr>
+<td><img src=""/>
+<td style="vertical-align:top">
+
+**meteor npm install moment** See https://momentjs.com/
+</table>
+
+

@@ -1,22 +1,36 @@
 /* @flow */
 import {combineReducers} from "redux"
-const authReducer = (state/*:{}*/ = {},action/*:string*/)/*:{}*/ => {
-  return state
+import {firestoreReducer} from "redux-firestore"
+import {firebaseReducer} from "react-redux-firebase"
+const authReducer = (state/*:AuthDetails*/ = {authError:null,auth:null},action/*:MarioAction*/)/*:AuthDetails*/ => {
+  switch(action.type) {
+    case "LOGIN_ERROR": return {...state, authError: "Login failed"}
+    case "LOGIN_SUCCESS": return {...state, authError: null}
+    case "SIGNOUT_SUCCESS": return state
+    case "SIGNUP_SUCCESS": return {...state, authError: null}
+    case "SIGNUP_ERROR": return {...state, authError: action.error.message}
+    default: return state
+  }
 }
-const projectsState/*:MarioProjectCollection*/ = {
-  projects: [
-    {id:"1", title:"Design a practical SCRUM methodology", content:"Details of project 1"},
-    {id:"2", title:"Project 2 title", content:"Details of project 2"},
-    {id:"3", title:"Project 3 title", content:"Details of project 3"},
-    {id:"4", title:"Large scale modernizations of farms", content:"Details of project 4"},
-  ]
-}
-const projectReducer = (state/*:MarioProjectCollection*/ = projectsState,action/*:string*/)/*:MarioProjectCollection*/ => {
-  return state
+const projectReducer = (state/*:ProjectDocumentCollection*/ = {projects:{}},action/*:MarioAction*/)/*:ProjectDocumentCollection*/ => {
+  switch(action.type) {
+    case "CREATE_PROJECT": //Flow guarantees that this string is correct
+      console.log("Project Created:",action.project)
+      //console.log("Project Created:",action.error) //Wow, Flow would be able to detect this error, too; brilliant.
+      return state
+    case "CREATE_PROJECT_ERROR": //Flow guarantees that this string is correct
+      console.log("Project Creation Error:",action.error)
+      return state
+    default:
+      //console.log("What is this:",action.type)
+      return state
+    }
 }
 const reducerTable/*:RootReducersFunctionTable*/ = {
   auth: authReducer,
-  marioProjectCollection: projectReducer //returns MarioProjectCollection
+  marioProjectCollection: projectReducer, //returns ProjectDocumentCollection
+  firestore: firestoreReducer,
+  firebase: firebaseReducer, //For authentication
 }
 export const rootReducer = combineReducers(reducerTable)
 // export const rootReducer = combineReducers({
