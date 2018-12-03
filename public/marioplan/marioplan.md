@@ -1,5 +1,29 @@
 # Marioplan (Branch)
 This is a remake of <a href="https://www.youtube.com/watch?v=Oi4v5uxTY5o&list=PL4cUxeGkcC9iWstfXntcj8f-dFZ4UtlN3">Net Ninja's Mariplan (React, Redux & Firebase App Tutorial)</a> with Meteor and SAP B1 SL. In his tutorial, Shaun Pelling uses Materialize CSS, that's why this is a near perfect startup project to learn from. Firesbase is interesting, too, since it is an alternative to Meteor's built-in Mongo database system for user authentication. A possible architecture of the Tiva11 service is that a user configures his/her own system defining a SAP B1 SL URL to the company database, then the employees can be configured with their own dedicated or shared SAP users. The service fee is per employee/month + transaction peanuts. For customer/user/employee registration a Firebase/Meteor database would be perfect.
+
+## Sprint 3 - Firebase Cloud Functions, Deployment
+This sprint covers videos 33 - 40. Video 33 starts talking about Firebase Functions.
+For a production system configuring security rules as Ninja explained in video 32 is terribly important, but for this experimenting I didn't spent any moment on that. 
+I created a new branch for this sprint: marioplan3.
+
+<table>
+<tr>
+<td width="50%"><img src="firebaseclilogin.png"/>
+<td style="vertical-align:top">
+
+**npm install -g firebase-tools**
+<br/>**firebase login**
+<br/>**meteor build .deploy --directory --server-only --architecture os.linux.x86_64**
+When buildig Meteor for deployment you should use a target folder that is outside of the source tree, otherwise you will have a message "The output directory is under your source tree. Your generated files may get interpreted as source code! Consider building into a different directory instead meteor build ../output". Instead of using an outside directory, I used a dot-named folder, that is automatically ignored by Meteor, and I've added .deploy to **.gitignore** 
+</tr>
+<tr>
+<td width="50%"><img src="firebaseclideployhello.png"/>
+<td style="vertical-align:top">
+
+**firebase deploy --only functions**
+</tr>
+</table>
+
 ## Sprint 1 - Setup, Getting Started with UI, React, Redux
 This sprint covers videos 1 - 13. Video 14 starts talking about Redux Thunk.
 I renamed the marioplan branch to marioplan1 with VS Code's excellent Git tools.
@@ -75,8 +99,8 @@ The **props/*:{match:{params:{id:number|string}}}*/** definition caused me a lot
 </tr>
 </table>
 
-## Sprint 2 - Beyong Getting Started: Redux Thunk
-This sprint covers videos 14 - . Video 14 starts talking about Redux Thunk.
+## Sprint 2 - Beyong Getting Started: Firebase/Firestore Integration, Redux Thunk
+This sprint covers videos 14 - 32. Video 14 starts talking about Redux Thunk.
 I created a new branch for this sprint: marioplan2.
 
 <table>
